@@ -850,3 +850,18 @@ Commit PROJECT-CONTEXT.md and push to GitHub.
 Next project phase:
 
 Day 2 — Security + Sales Cloud + Service Cloud
+
+### Known Limitation — Test Users
+
+Two additional internal test users could not be created because the Salesforce Developer Edition has no remaining Salesforce or Salesforce Platform user licenses.
+
+Current license availability:
+- Salesforce: 2 total, 2 used, 0 remaining
+- Salesforce Platform: 3 total, 3 used, 0 remaining
+- Customer Community Login: 5 remaining
+- External Apps Login: 20 remaining
+- Identity: 10 remaining
+
+The available Community/Identity licenses were not used as substitutes because they do not provide the same capabilities as internal Salesforce users.
+
+Day 2 security configuration was therefore completed using the available administrator context. Additional internal-user testing can be performed later when an appropriate Salesforce/Salesforce Platform license is available.
