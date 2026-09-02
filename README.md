@@ -1,58 +1,289 @@
-# Salesforce DX Project
+# PROPFlow AI — Salesforce Real Estate CRM
 
-Salesforce DX is a development approach that brings source-driven development, team collaboration, and continuous integration to the Salesforce Platform. Instead of working directly in an org through a web browser, you work with metadata as source files in a local DX project, track changes in version control, and deploy through automated processes.
+> A Salesforce-based Real Estate CRM for managing properties, property units, customer requirements, bookings, and sales processes.
 
-This project template gets you started with the tools and structure you need to build Salesforce applications using source control, scratch orgs, and the Salesforce CLI.
+## 📌 Overview
 
-## Prerequisites
+PROPFlow AI is a Salesforce CRM project designed around a real-estate business use case.
 
-Before you start, make sure you have:
+The project focuses on building a realistic Salesforce application using **Salesforce DX, custom objects, security configuration, and declarative automation with Flow**.
 
-- **Salesforce CLI** - Download from [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli). See [Install Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) for details.
-- **VS Code with Salesforce Extension Pack** - See [Installation Instructions](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide/install.html) for details. Includes the Agentforce Vibes extension.
-- **A development org** - Sign up for a free Developer Edition org [here](https://developer.salesforce.com/signup).
-- **Dev Hub enabled** (optional, required to create scratch orgs) - You can enable Dev Hub in your development org under Setup > Dev Hub.  See [Provide Developers Access to Salesforce DX Tools](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_dx_tools.htm).
+The application is being developed incrementally, with future plans to explore Apex, Lightning Web Components, integrations, testing, DevOps, and Salesforce AI capabilities.
 
-## Project Structure
+---
 
-Your DX project follows this structure:
+## 🎯 Project Objectives
 
-- **`force-app/main/default/`** - Your metadata source files live in this default package directory. You can configure additional package directories in the `sfdx-project.json` file.
-- **`config/`** - Scratch org definitions and project settings
-- **`scripts/`** - Automation scripts for common tasks
-- **`sfdx-project.json`** - Project manifest that defines package directories, namespace, API version, and other project-level settings
+PROPFlow is designed to help a real-estate organization:
 
-See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm).
+* Manage properties and individual property units
+* Manage customer property requirements
+* Track property availability
+* Manage property bookings
+* Automate property-unit status changes
+* Control access based on business roles
+* Build a scalable Salesforce DX project structure
+* Explore Salesforce development and AI capabilities
 
-## Get Started
+---
 
-Ready to start developing? The [Get Started with Salesforce DX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_get_started_dx.htm) guide walks you through your first project, from creating a scratch org to creating a simple Apex class or LWC to deploying your code to a sandbox.
+## 🏗️ Current Application Architecture
 
-## Common Salesforce CLI Commands
+```text
+                  PROPFlow AI
+                       │
+        ┌──────────────┼──────────────┐
+        │              │              │
+     Property      Customer       Property
+                    Requirement      Unit
+        │                             │
+        └──────────────┬──────────────┘
+                       │
+                    Booking
+                       │
+                       ▼
+              Salesforce Flow
+                       │
+          ┌────────────┼────────────┐
+          │            │            │
+       Reserved       Sold       Available
+```
 
-Here are common CLI commands that you'll use the most:
+---
 
-- `sf org login web`: Authorize an org
-- `sf org open`: Open your org in a browser
-- `sf org create scratch`: Create a scratch org
-- `sf project deploy start`: Deploy metadata to your org
-- `sf project retrieve start`: Retrieve metadata from your org
-- `sf template generate <artifact>`: Scaffold new components, such as Apex classes and triggers, LWC components, Lightning apps, and more
-- `sf apex <command>`: Run Apex tests, run anonymous Apex blocks, and view logs
-- `sf data <command>`: Work with test data
-- `sf alias <command>`: Manage org aliases
-- `sf config <command>`: Configure CLI settings
+# 🧩 Salesforce Data Model
 
-## Use Agentforce Vibes to Build Lightning Apps
+The current project includes the following custom objects:
 
-Transform your ideas into custom Lightning apps that extend CRM workflows directly in Lightning Experience. Through natural conversations with Agentforce Vibes, implement custom objects and fields, complex business logic, and dynamic UI components. See [Build a Lightning App Using Agentforce Vibes](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/lexapp-overview.html).
+### Property
 
-## Additional Resources
+Represents a real-estate property or project.
 
-- [Agentforce Vibes Developer Guide](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/einstein-overview.html)
-- [Salesforce CLI Installation Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
-- [Salesforce CLI Plugin Development Guide](https://developer.salesforce.com/docs/platform/salesforce-cli-plugin/guide/conceptual-overview.html)
-- [Salesforce VS Code Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
+### Property Unit
 
+Represents an individual unit associated with a property.
+
+### Property Requirement
+
+Stores customer requirements related to property searches.
+
+### Booking
+
+Represents a customer's booking of a property unit.
+
+---
+
+# ⚙️ Automation
+
+Salesforce Flow is used to automate the property and booking lifecycle.
+
+### Property → Property Unit
+
+When a new Property is created, the automation creates the required Property Unit record and sets its initial status to **Available**.
+
+```text
+Property Created
+       ↓
+Property Unit Created
+       ↓
+Status = Available
+```
+
+### Booking Lifecycle
+
+The project also automates property-unit availability based on booking status.
+
+```text
+Booking Created
+       ↓
+Property Unit = Reserved
+       ↓
+Booking Confirmed
+       ↓
+Property Unit = Sold
+```
+
+If a booking is cancelled:
+
+```text
+Booking Cancelled
+       ↓
+Property Unit = Available
+```
+
+### Implemented Flows
+
+* Create Property Units
+* Reserve Property Unit
+* Confirm Booking / Sell Unit
+* Cancel Booking / Release Unit
+
+These flows have been tested as part of the current implementation.
+
+---
+
+# 🔐 Security & Access Control
+
+The project includes a Salesforce security model based on different business responsibilities.
+
+### Permission Sets
+
+* PROPFlow Sales User
+* PROPFlow Sales Manager
+* PROPFlow Property Manager
+* PROPFlow Finance User
+* PROPFlow Support User
+
+### Role Hierarchy
+
+A role hierarchy has been configured to represent sales-management relationships and access.
+
+The project currently demonstrates concepts including:
+
+* Permission Sets
+* Role Hierarchy
+* Object-level access
+* Field-level access
+* Record-level security concepts
+
+---
+
+# 🛠️ Salesforce DX
+
+PROPFlow follows a Salesforce DX source-driven project structure.
+
+```text
+PROPFlow-AI-Salesforce/
+│
+├── force-app/
+│   └── main/
+│       └── default/
+│           ├── objects/
+│           ├── flows/
+│           └── permissionsets/
+│
+├── config/
+├── scripts/
+├── .gitignore
+├── sfdx-project.json
+├── package.json
+└── README.md
+```
+
+The project is maintained using Git and GitHub so Salesforce metadata can be tracked as source code.
+
+---
+
+# 🔄 Development Workflow
+
+```text
+Salesforce Org
+      ↕
+Salesforce CLI
+      ↕
+VS Code
+      ↕
+Salesforce DX Project
+      ↕
+Git
+      ↕
+GitHub
+```
+
+---
+
+# Development Progress
+
+### Day 1 — Core Data Model
+
+* [x] Salesforce DX project setup
+* [x] Property object
+* [x] Property Requirement object
+* [x] Property Unit object
+* [x] Core real-estate data model
+
+### Day 2 — Security
+
+* [x] Permission Sets
+* [x] Role hierarchy
+* [x] Sales access model
+* [x] Property management access
+* [x] Finance access
+* [x] Support access
+
+### Day 3 — Automation
+
+* [x] Property → Property Unit automation
+* [x] Booking → Reserved automation
+* [x] Confirmed Booking → Sold automation
+* [x] Cancelled Booking → Available automation
+* [x] End-to-end Flow testing
+
+### Upcoming Development
+
+* [ ] Apex
+* [ ] SOQL
+* [ ] Triggers
+* [ ] Apex Test Classes
+* [ ] Lightning Web Components
+* [ ] Reports & Dashboards
+* [ ] API / Integration concepts
+* [ ] Advanced Salesforce development
+* [ ] Salesforce AI capabilities
+
+---
+
+# 📊 Current Status
+
+**Project Status:** 🚧 In Development
+
+### Completed
+
+* Salesforce DX project setup
+* Real-estate data model
+* Custom objects
+* Permission Sets
+* Role hierarchy
+* Security foundation
+* Property Unit automation
+* Booking lifecycle automation
+* Flow testing
+
+### Currently Working On
+
+**Apex + SOQL + Triggers**
+
+---
+
+# 🎓 Salesforce Concepts Demonstrated
+
+The current implementation demonstrates:
+
+* Salesforce DX
+* Custom Objects
+* Data Modeling
+* Permission Sets
+* Role Hierarchy
+* Salesforce Security
+* Record-Triggered Flow
+* Business Process Automation
+* Git/GitHub
+* Source-driven development
+
+Future development will expand the project toward Salesforce development and AI capabilities.
+
+---
+
+# 👨‍💻 Author
+
+**Ayush Mehunkar**
+
+MCA Student | Salesforce Administration & Development
+
+GitHub: **ayush11-ayu**
+
+---
+
+## 📄 Disclaimer
+
+This is an educational portfolio project created to demonstrate Salesforce administration, automation, development, and source-driven development concepts through a realistic real-estate CRM use case.
